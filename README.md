@@ -7,3 +7,16 @@ The SPSRC JupyterHub/BinderHub Services Repository is a centralized collection o
 
 By sharing these services, we aim to promote collaboration, knowledge sharing, and the reusability of JupyterHub configurations within our organization. The repository serves as a valuable resource for SPSRC members to discover, contribute, and learn from the diverse range of JupyterHub services that have been successfully deployed within our environment.
 
+## Jupyter Hub for IAA Users - Access based on LDAP
+
+## Jupyter Hub for ESCAPE Users - Access based on ESCAPE IAM
+
+## Jupyter Hub + BinderHub for Dask - Acces based on SKAO IAM
+
+## Jupyter Hub for PYSNACKS 2023 - Open access
+
+## Jupyter Hub for PYSNACKS 2022 - Open access
+
+## Jupyter Hub for SOMACHINE 2021 - Open access
+
+## Jupyter Hub for SOSTAT 2021 - Open access
