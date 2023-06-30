@@ -26,6 +26,32 @@ Features:
 - JupyterHub
 - Basic Storage (for regular clusters) and Cinder Storage (for OpenStack deployment)
 
+🚀 Deployment to the latest version:
+
+```
+helm repo add jupyterhub https://hub.jupyter.org/helm-chart/
+helm repo update
+helm install --create-namespace --namespace=jhub-escape jhub-escape jupyterhub/jupyterhub  --values escape-hub/values.yaml
+```
+
+🚀🩹 Deployment to a specific version:
+
+```
+helm repo add jupyterhub https://hub.jupyter.org/helm-chart/
+helm repo update
+helm install --create-namespace --namespace=jhub-escape jhub-escape jupyterhub/jupyterhub --version 2.0.0 --values escape-hub/values.yaml
+```
+
+
+Verify deployment version:
+
+```
+helm list --namespace jhub-escape
+NAME            NAMESPACE       REVISION        UPDATED                                 STATUS          CHART                   APP VERSION
+jhub-escape     jhub-escape     1               2023-06-30 12:17:49.71132246 +0000 UTC  deployed        jupyterhub-2.0.0        3.0.0
+```
+
+
 
 ## Jupyter Hub + BinderHub for Dask
 
