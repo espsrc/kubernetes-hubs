@@ -1,0 +1,52 @@
+proxy:
+  secretToken: "<YOUR_SECRET_TOKEN>"
+  service:
+    type: NodePort
+    nodePorts:
+      http: <YOUR_PORT>
+
+hub:
+  baseUrl: /sostat2021/
+  extraConfig:
+    logoConfig: |
+      import urllib.request
+      urllib.request.urlretrieve("https://drive.google.com/uc?export=download&id=1DH8vbKpTcueOl_druObkmFQSOJlo-8Zd", "iaalogo.png")
+      c.JupyterHub.logo_file = '/srv/jupyterhub/iaalogo.png'
+    msgConfig: |
+      c.JupyterHub.template_vars = {'announcement_login': 'This service is open to <strong>SOSTAT2021</strong> members. Log in using your <strong>SOSTAT2021</strong> credentials (<a href=\"https://github.com/spsrc/sostat2021#option-2-execute-notebook-tutorials-in-the-jupyterhub-instance-at-iaa-csic\">Execution of the tutorials - SOSTAT 2021</a>). ' + \
+                                                          'By accessing this service you agree with the IAA IT usage policy in <a href=\"https://www.cc.iaa.csic.es/rules/\">IAA-IT Rules</a>. ' + \
+                                                          'We encourage you to give us feedback on your experience and questions by sending us an email: <a href=\"mailto:ldarriba@iaa.es\">ldarriba@iaa.es</a>, or for IT support to: <a href=\"mailto:mparra@iaa.es\">mparra@iaa.es</a> ' + \
+                                                          'You can also contact us via Slack <a href=\"https://join.slack.com/t/somachine-2/shared_invite/zt-o5908csw-cGbPA~sqYcH8cS9LTXohEA\">SOSTAT2021</a>' \
+                                   }
+
+singleuser:
+  defaultUrl: "/lab/tree/sostat2021/tutorials/index.ipynb"
+  cpu:
+    limit: 2
+    guarantee: 1
+  memory:
+    limit: 2G
+    guarantee: 2G
+  storage:
+    type: dynamic
+    capacity: 10Gi
+    dynamic:
+      storageClass: cinder
+  image:
+    name: jupyter/minimal-notebook
+    tag: latest
+    pullPolicy: IfNotPresent
+  profileList:
+     - display_name: "SOSTAT2021"
+       description: "Environment for the SOSTAT2021 school"
+       default: true
+       kubespawner_override:
+          image: amigahub/sostat2021:v3
+  lifecycleHooks:
+    postStart:
+      exec:
+        command:
+           - "sh"
+           - "-c"
+           - >
+             test -d sostat2021 || git clone https://github.com/spsrc/sostat2021.git
