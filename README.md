@@ -7,16 +7,55 @@ The SPSRC JupyterHub/BinderHub Services Repository is a centralized collection o
 
 By sharing these services, we aim to promote collaboration, knowledge sharing, and the reusability of JupyterHub configurations within our organization. The repository serves as a valuable resource for SPSRC members to discover, contribute, and learn from the diverse range of JupyterHub services that have been successfully deployed within our environment.
 
-## Jupyter Hub for IAA Users - Access based on LDAP
+## Jupyter Hub for IAA Users
 
-## Jupyter Hub for ESCAPE Users - Access based on ESCAPE IAM
+Features:
+- Access based on LDAP
+- JupyterHub
+- Basic Storage (for regular clusters) and Cinder Storage (for OpenStack deployment)
 
-## Jupyter Hub + BinderHub for Dask - Acces based on SKAO IAM
 
-## Jupyter Hub for PYSNACKS 2023 - Open access
+## Jupyter Hub for ESCAPE Users 
 
-## Jupyter Hub for PYSNACKS 2022 - Open access
+Features:
+- Access based on IAM
+- JupyterHub
+- Basic Storage (for regular clusters) and Cinder Storage (for OpenStack deployment)
 
-## Jupyter Hub for SOMACHINE 2021 - Open access
 
-## Jupyter Hub for SOSTAT 2021 - Open access
+## Jupyter Hub + BinderHub for Dask
+
+Features:
+- Access based on IAM 
+- JupyterHub and BinderHub
+- Basic Storage (for regular clusters) and Cinder Storage (for OpenStack deployment)
+
+
+## Jupyter Hub for PYSNACKS 2023
+
+Features:
+- Access based on user+password
+- JupyterHub
+- Basic Storage (for regular clusters) and Cinder Storage (for OpenStack deployment)
+
+
+## Jupyter Hub for PYSNACKS 2022
+
+Features:
+- Access based on user+password
+- JupyterHub
+- Basic Storage (for regular clusters) and Cinder Storage (for OpenStack deployment)
+
+## Jupyter Hub for SOMACHINE 2021
+
+Features:
+- Access based on user+password
+- JupyterHub
+- Basic Storage (for regular clusters) and Cinder Storage (for OpenStack deployment)
+
+## Jupyter Hub for SOSTAT 2021
+
+Features:
+- Access based on user+password
+- JupyterHub
+- Basic Storage (for regular clusters) and Cinder Storage (for OpenStack deployment)
