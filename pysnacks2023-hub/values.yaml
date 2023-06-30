@@ -1,0 +1,55 @@
+proxy:
+  secretToken: "<YOUR_SECRET_TOKEN>"
+  service:
+    type: NodePort
+    nodePorts:
+      http: <YOUR_PORT>
+
+hub:
+  baseUrl: /pysnacks2023/
+  extraConfig:
+    logoConfig: |
+      import urllib.request
+      urllib.request.urlretrieve("https://drive.google.com/uc?export=download&id=1DH8vbKpTcueOl_druObkmFQSOJlo-8Zd", "iaalogo.png")
+      c.JupyterHub.logo_file = '/srv/jupyterhub/iaalogo.png'
+    msgConfig: |
+      c.JupyterHub.template_vars = {'announcement_login': 'Welcome to PySnacks Virtual workshop for the IAA Severo Ochoa Training Initiative<BR>This service is open to <strong>PySnacks</strong> members. Log in using your <strong>PySnacks</strong> credentials (see <a href=\"https://github.com/spsrc/pysnacks_1\"> Starting with PySnacks</a>). ' + \
+                                                          'By accessing this service you agree with the IAA IT usage policy in <a href=\"https://www.cc.iaa.csic.es/rules/\">IAA-IT Rules</a>. ' + \
+                                                          'We encourage you to give us feedback on your experience and questions by sending us an email: <a href=\"mailto:ldarriba@iaa.es\">ldarriba@iaa.es</a>, or for IT support to: <a href=\"mailto:mparra@iaa.es\">mparra@iaa.es</a> <a href=\"mailto:jsanchez@iaa.es\">jsanchez@iaa.es</a> ' + \
+                                                          'You can also contact us via Slack Channel <a href=\"https://join.slack.com/t/pysnacks/\">PySnacks</a>' \
+                                   }
+
+singleuser:
+  defaultUrl: "/lab/tree/pysnacks2023/index.ipynb"
+  cpu:
+    limit: 3
+    guarantee: .5
+  memory:
+    limit: 5G
+    guarantee: 3G
+  storage:
+    type: dynamic
+    capacity: 6Gi
+    dynamic:
+      storageClass: cinder
+  image:
+    name: jupyter/minimal-notebook
+    tag: latest
+    pullPolicy: IfNotPresent
+  profileList:
+     - display_name: "IAA-SO PySnacks"
+       description: "Environment for the PySnacks workshop for the IAA Severo Ochoa Training Initiative"
+       default: true
+       kubespawner_override:
+          image: amigahub/pysnacks:v3Collab
+  lifecycleHooks:
+    postStart:
+      exec:
+        command:
+           - "sh"
+           - "-c"
+           - >
+             test -d pysnacks_1 || git clone https://github.com/spsrc/pysnacks_1.git
+
+cull:
+  enabled: false
