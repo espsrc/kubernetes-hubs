@@ -9,10 +9,14 @@ By sharing these services, we aim to promote collaboration, knowledge sharing, a
 
 ## Jupyter Hub for IAA Users
 
-Features:
+🔡 Features:
 - Access based on LDAP
 - JupyterHub
 - Basic Storage (for regular clusters) and Cinder Storage (for OpenStack deployment)
+
+🚀 Deployment:
+
+
 
 
 ## Jupyter Hub for ESCAPE Users 
