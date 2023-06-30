@@ -1,0 +1,49 @@
+proxy:
+  secretToken: "<YOUR_SECRET_TOKEN>"
+  service:
+    type: NodePort
+    nodePorts:
+      http: <YOUR PORT>
+
+hub:
+  baseUrl: /iaa/
+  extraConfig:
+    logoConfig: |
+      import urllib.request
+      urllib.request.urlretrieve("https://drive.google.com/uc?export=download&id=1DH8vbKpTcueOl_druObkmFQSOJlo-8Zd", "iaalogo.png")
+      c.JupyterHub.logo_file = '/srv/jupyterhub/iaalogo.png'
+    msgConfig: |
+      c.JupyterHub.template_vars = {'announcement_login': 'This service is open to IAA members. Log in using your IAA credentials. ' + \
+                                                          'By accessing this service you agree with the IAA IT usage policy in https://www.cc.iaa.csic.es/rules/. ' + \
+                                                          'We encourage you to use it and give us feedback on your experience by sending us an email: ska-itsupport@iaa.es. ' + \
+                                                          'You can also contact us via Slack https://join.slack.com/t/spsrc/signup' \
+                                   }
+
+singleuser:
+  defaultUrl: "/lab"
+  image:
+    name: jupyter/minimal-notebook
+    tag: latest
+    pullPolicy: IfNotPresent
+  profileList:
+     - display_name: "Minimal environment"
+       description: "To avoid too much bells and whistles: Python."
+       default: true
+     - display_name: "Datascience environment"
+       description: "If you want the additional bells and whistles: Python, R, and Julia."
+       kubespawner_override:
+         image: jupyter/datascience-notebook:latest
+     - display_name: "Spark environment"
+       description: "The Jupyter Stacks spark image!"
+       kubespawner_override:
+         image: jupyter/all-spark-notebook:latest
+
+auth:
+  type: ldap
+  ldap:
+    server:
+      address: dae-ldap.iaa.es
+    dn:
+      templates:
+        - 'uid={username},ou=People,dc=iaa,dc=es'
+                                          
