@@ -1,4 +1,5 @@
-![imagen](https://github.com/spsrc/kubernetes-hubs/assets/7033451/1c676af8-be99-4185-a687-9f967e443f12)
+![imagen](https://github.com/spsrc/kubernetes-hubs/assets/7033451/6c3d8fb2-b83f-411b-837a-4a496b6cb6e6)
+
 
 # SPSRC Jupyter/Binder Hubs deployments at the SPSRC
 
