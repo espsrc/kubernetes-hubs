@@ -1,0 +1,128 @@
+binderhub:
+  config:
+    BinderHub:
+      auth_enabled: true
+      base_url: /binderhub/
+      hub_url: https://spsrc-jupyter.iaa.csic.es/daskhub/
+      image_prefix: srcdev/sdc-bh-
+      use_registry: true
+  dind:
+    daemonset:
+      image:
+        name: docker.io/library/docker
+        tag: 24.0.2-dind
+  imageBuilderType: dind
+  imageCleaner:
+    enabled: false
+  jupyterhub:
+    hub:
+      baseUrl: /daskhub/
+      config:
+        BinderSpawner:
+          auth_enabled: true
+        GenericOAuthenticator:
+          authorize_url: https://ska-iam.stfc.ac.uk/authorize
+          client_id: <REDACTED>
+          client_secret: <REDACTED>
+          login_service: SKA IAM
+          oauth_callback_url: https://spsrc-jupyter.iaa.csic.es/daskhub/hub/oauth_callback
+          scope:
+          - openid
+          - profile
+          - email
+          - offline_access
+          token_url: https://ska-iam.stfc.ac.uk/token
+          userdata_params:
+            state: state
+          userdata_token_method: GET
+          userdata_url: https://ska-iam.stfc.ac.uk/userinfo
+          username_key: preferred_username
+        JupyterHub:
+          authenticator_class: generic-oauth
+      db:
+        pvc:
+          storageClassName: local-path
+      extraConfig:
+        00-add-dask-gateway-values: |
+          # 1. Sets `DASK_GATEWAY__PROXY_ADDRESS` in the singleuser environment.
+          # 2. Adds the URL for the Dask Gateway JupyterHub service.
+          import os
+          # These are set by jupyterhub.
+          release_name = os.environ["HELM_RELEASE_NAME"]
+          release_namespace = os.environ["POD_NAMESPACE"]
+          if "PROXY_HTTP_SERVICE_HOST" in os.environ:
+              # https is enabled, we want to use the internal http service.
+              gateway_address = "http://{}:{}/services/dask-gateway/".format(
+                  os.environ["PROXY_HTTP_SERVICE_HOST"],
+                  os.environ["PROXY_HTTP_SERVICE_PORT"],
+              )
+              print("Setting DASK_GATEWAY__ADDRESS {} from HTTP service".format(gateway_address))
+          else:
+              gateway_address = "http://proxy-public/services/dask-gateway"
+              print("Setting DASK_GATEWAY__ADDRESS {}".format(gateway_address))
+          # Internal address to connect to the Dask Gateway.
+          c.KubeSpawner.environment.setdefault("DASK_GATEWAY__ADDRESS", gateway_address)
+          # Internal address for the Dask Gateway proxy.
+          c.KubeSpawner.environment.setdefault("DASK_GATEWAY__PROXY_ADDRESS", "gateway://traefik-{}-dask-gateway.{}:80".format(release_name, release_namespace))
+          # Relative address for the dashboard link.
+          c.KubeSpawner.environment.setdefault("DASK_GATEWAY__PUBLIC_ADDRESS", "/services/dask-gateway/")
+          # Use JupyterHub to authenticate with Dask Gateway.
+          c.KubeSpawner.environment.setdefault("DASK_GATEWAY__AUTH__TYPE", "jupyterhub")
+          # Adds Dask Gateway as a JupyterHub service to make the gateway available at
+          # {HUB_URL}/services/dask-gateway
+          service_url = "http://traefik-{}-dask-gateway.{}".format(release_name, release_namespace)
+
+          for service in c.JupyterHub.services:
+              if service["name"] == "dask-gateway":
+                  if not service.get("url", None):
+                      print("Adding dask-gateway service URL")
+                      service.setdefault("url", service_url)
+                  break
+          else:
+              print("dask-gateway service not found, this should not happen!")
+      loadRoles:
+        user:
+          scopes:
+          - self
+          - access:services
+      services:
+        binder:
+          oauth_client_id: service-binderhub
+          oauth_no_confirm: true
+          oauth_redirect_uri: https://spsrc-jupyter.iaa.csic.es/binderhub/hub/oauth_callback
+        dask-gateway:
+          display: false
+    singleuser:
+      cmd: jupyterhub-singleuser
+      defaultUrl: /lab
+      image:
+        name: pangeo/base-notebook
+        tag: 2023.02.27
+      profileList:
+      - description: Includes Dask Gateway
+        display_name: Pangeo base
+        kubespawner_override:
+          image: pangeo/base-notebook:2023.02.27
+      - description: An Ubuntu 18.04 based image with Python 3.7
+        display_name: SDC1 Solution
+        kubespawner_override:
+          image: registry.gitlab.com/ska-telescope/sdc/sdc1-solution:scipy-nb-ubuntu18
+      storage:
+        dynamic:
+          storageClass: local-path
+  registry:
+    password: <REDACTED>
+    username: <REDACTED>
+dask-gateway:
+  enabled: true
+  gateway:
+    auth:
+      type: jupyterhub
+    prefix: /services/dask-gateway
+  traefik:
+    service:
+      type: ClusterIP
+dask-kubernetes:
+  enabled: false
+rbac:
+  enabled: true
