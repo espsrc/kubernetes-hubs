@@ -14,7 +14,31 @@ By sharing these services, we aim to promote collaboration, knowledge sharing, a
 - JupyterHub
 - Basic Storage (for regular clusters) and Cinder Storage (for OpenStack deployment)
 
-🚀 Deployment:
+🚀 Deployment to the latest version:
+
+```
+helm repo add jupyterhub https://hub.jupyter.org/helm-chart/
+helm repo update
+helm install --create-namespace --namespace=jhub-iaa jhub-iaa jupyterhub/jupyterhub  --values iaa-hub/values.yaml
+```
+
+🚀🩹 Deployment to a specific version:
+
+```
+helm repo add jupyterhub https://hub.jupyter.org/helm-chart/
+helm repo update
+helm install --create-namespace --namespace=jhub-escape jhub-iaa jupyterhub/jupyterhub --version 2.0.0 --values iaa-hub/values.yaml
+```
+
+
+Verify deployment version:
+
+```
+helm list --namespace jhub-escape
+NAME            NAMESPACE       REVISION        UPDATED                                 STATUS          CHART                   APP VERSION
+jhub-iaa     jhub-iaa     1               2023-06-30 11:19:44.91132246 +0000 UTC  deployed        jupyterhub-2.0.0        3.0.0
+```
+
 
 
 
@@ -59,6 +83,32 @@ Features:
 - Access based on IAM 
 - JupyterHub and BinderHub
 - Basic Storage (for regular clusters) and Cinder Storage (for OpenStack deployment)
+
+🚀 Deployment to the latest version:
+
+```
+helm repo add jupyterhub https://hub.jupyter.org/helm-chart/
+helm repo update
+helm install --create-namespace --namespace=jhub-daskhub jhub-daskhub jupyterhub/jupyterhub  --values dask-hub/values.yaml
+```
+
+🚀🩹 Deployment to a specific version:
+
+```
+helm repo add jupyterhub https://hub.jupyter.org/helm-chart/
+helm repo update
+helm install --create-namespace --namespace=jhub-daskhub jhub-daskhub jupyterhub/jupyterhub --version 2.0.0 --values dask-hub/values.yaml
+```
+
+
+Verify deployment version:
+
+```
+helm list --namespace jhub-escape
+NAME            NAMESPACE       REVISION        UPDATED                                 STATUS          CHART                   APP VERSION
+jhub-daskhub     jhub-daskhub     1               2023-06-30 12:17:49.71132246 +0000 UTC  deployed        jupyterhub-2.0.0        3.0.0
+```
+
 
 
 ## Jupyter Hub for PYSNACKS 2023
